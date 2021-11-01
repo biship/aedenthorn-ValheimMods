@@ -11,14 +11,14 @@ using UnityEngine;
 
 namespace TreeRespawn
 {
-    [BepInPlugin("aedenthorn.TreeRespawn", "Tree Respawn", "0.8.0")]
+    [BepInPlugin("aedenthorn.TreeRespawn", "Tree Respawn", "0.8.1")]
     public class BepInExPlugin : BaseUnityPlugin
     {
-        private static readonly bool isDebug = true;
+        // private static readonly bool isDebug = false;
 
-        public static void Dbgl(string str = "", bool pref = true)
+        public static void Dbgl(string str = "", bool pref = false)
         {
-            if (isDebug)
+            if (isDebug.Value)
                 Debug.Log((pref ? typeof(BepInExPlugin).Namespace + " " : "") + str);
         }
 
@@ -27,6 +27,7 @@ namespace TreeRespawn
         public static ConfigEntry<bool> modEnabled;
         public static ConfigEntry<int> nexusID;
         public static ConfigEntry<float> respawnDelay;
+        public static ConfigEntry<bool> isDebug;
 
         public static Dictionary<string, string> seedsDic = new Dictionary<string, string>();
 
@@ -35,7 +36,8 @@ namespace TreeRespawn
             context = this;
             modEnabled = Config.Bind<bool>("General", "Enabled", true, "Enable this mod");
             nexusID = Config.Bind<int>("General", "NexusID", 37, "Nexus mod ID for updates");
-            respawnDelay = Config.Bind<float>("General", "RespawnDelay", 2.5f, "Delay in seconds to spawn sapling");
+            respawnDelay = Config.Bind<float>("General", "RespawnDelay", 3f, "Delay in seconds to spawn sapling");
+            isDebug = Config.Bind<bool>("Logging", "Logging Enabled", false, "Enable Logging");
 
             if (!modEnabled.Value)
                 return;

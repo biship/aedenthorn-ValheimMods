@@ -26,7 +26,7 @@ namespace ContainersAnywhere
 
         
         public static Dictionary<string, List<Container>> containerDict = new Dictionary<string, List<Container>>();
-        private static BepInExPlugin context;
+        // private static BepInExPlugin context;
         private static int currentContainerIndex = 0;
         private static string currentType = "";
 

@@ -9,7 +9,7 @@
   <ItemGroup Label="QuestFramework">
     <Reference Include="QuestFramework">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(BepInExPath)\plugins\QuestFramework.dll</HintPath>
+      <HintPath>$(BepInExPath)\plugins-built\QuestFramework.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

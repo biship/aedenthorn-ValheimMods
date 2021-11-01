@@ -4,13 +4,12 @@ using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using UnityEngine;
 
 namespace MonsterAITweaks
 {
     [BepInPlugin("aedenthorn.MonsterAITweaks", "Monster AI Tweaks", "0.4.0")]
-    public class BepInExPlugin: BaseUnityPlugin
+    public class BepInExPlugin : BaseUnityPlugin
     {
         private static readonly bool isDebug = true;
         private static BepInExPlugin context;
@@ -20,6 +19,7 @@ namespace MonsterAITweaks
         public static ConfigEntry<int> nexusID;
 
         private static Dictionary<string, AIData> aiDataDict = new Dictionary<string, AIData>();
+        private static string assetPath;
 
         public static void Dbgl(string str = "", bool pref = true)
         {
@@ -37,6 +37,15 @@ namespace MonsterAITweaks
             harmony.PatchAll();
         }
 
+        private static void CheckModFolder()
+        {
+            if (!Directory.Exists(assetPath))
+            {
+                Dbgl("Creating mod folder");
+                Directory.CreateDirectory(assetPath);
+            }
+        }
+
         [HarmonyPatch(typeof(MonsterAI), "Awake")]
         static class MonsterAI_Awake_Patch
         {
@@ -48,7 +57,7 @@ namespace MonsterAITweaks
                 if (aiDataDict.ContainsKey(Utils.GetPrefabName(__instance.gameObject)))
                 {
                     SetMonsterAIData(__instance, aiDataDict[Utils.GetPrefabName(__instance.gameObject)]);
-                   
+
                 }
             }
         }
@@ -151,6 +160,22 @@ namespace MonsterAITweaks
                     return false;
                 }
                 return true;
+            }
+
+            private static AIData GetAIDataByName(string ai)
+            {
+                throw new NotImplementedException();
+            }
+
+            private static void LoadAllAIData(ZNetScene instance)
+            {
+                throw new NotImplementedException();
+            }
+
+            private static Dictionary<string, AIData> GetAIDataFromFiles()
+            {
+                 
+                throw new NotImplementedException();
             }
         }
 

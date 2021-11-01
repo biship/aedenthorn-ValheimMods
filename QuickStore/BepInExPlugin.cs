@@ -7,10 +7,10 @@ using UnityEngine;
 
 namespace QuickStore
 {
-    [BepInPlugin("aedenthorn.QuickStore", "Quick Store", "0.1.0")]
+    [BepInPlugin("aedenthorn.QuickStore", "Quick Store", "0.1.1")]
     public class BepInExPlugin: BaseUnityPlugin
     {
-        private static readonly bool isDebug = true;
+        // private static readonly bool isDebug = true;
 
         public static ConfigEntry<float> storeRangePlayer;
         public static ConfigEntry<string> itemDisallowTypes;
@@ -33,12 +33,13 @@ namespace QuickStore
         public static ConfigEntry<bool> mustHaveItemToPull;
         public static ConfigEntry<bool> modEnabled;
         public static ConfigEntry<int> nexusID;
+        public static ConfigEntry<bool> isDebug;
 
         private static BepInExPlugin context;
 
-        public static void Dbgl(string str = "", bool pref = true)
+        public static void Dbgl(string str = "", bool pref = false)
         {
-            if (isDebug)
+            if (isDebug.Value)
                 Debug.Log((pref ? typeof(BepInExPlugin).Namespace + " " : "") + str);
         }
         private void Awake()
@@ -63,9 +64,9 @@ namespace QuickStore
             mustHaveItemToPull = Config.Bind<bool>("General", "MustHaveItemToPull", true, "If true, a container must already have at least one of the item to pull.");
             storedString = Config.Bind<string>("General", "StoredString", "Stored {0} items in {1} containers", "Text to show after items are stored.");
             
-            
             modEnabled = Config.Bind<bool>("General", "Enabled", true, "Enable this mod");
             nexusID = Config.Bind<int>("General", "NexusID", 1595, "Nexus mod ID for updates");
+            isDebug = Config.Bind<bool>("Logging", "Logging Enabled", false, "Enable Logging");
 
             if (!modEnabled.Value)
                 return;
@@ -96,7 +97,7 @@ namespace QuickStore
                         c = collider.transform.parent.parent.GetComponent<Container>();
                     if(c && !c.IsInUse() && (bool)AccessTools.Method(typeof(Container), "CheckAccess").Invoke(c, new object[] { Player.m_localPlayer.GetPlayerID() } ))
                     {
-                        Dbgl($"In {c.name}.");
+                        Dbgl($"In container {c.name}.");
                         var items = Player.m_localPlayer.GetInventory().GetAllItems();
                         for (int i = items.Count - 1; i >= 0; i--)
                         {
@@ -124,10 +125,27 @@ namespace QuickStore
         private static bool DisallowItem(Container container, ItemDrop.ItemData item)
         {
             string name = item.m_dropPrefab.name;
+            Dbgl($"checking {name}...");
             if (itemAllowTypes.Value != null && itemAllowTypes.Value.Length > 0 && !itemAllowTypes.Value.Split(',').Contains(name))
+            {
+                Dbgl($"item {name} not found in allow list");
                 return true;
+            }
+            else
+            {
+                Dbgl($"item {name} found in allow list, or allow list is empty");
+            }
+
+            //if (itemDisallowTypes.Value.Split(',').Contains(name))
             if (itemDisallowTypes.Value.Split(',').Contains(name))
+            {
+                Dbgl($"found {name} in disallow list, NOT storing");
                 return true;
+            }
+            else
+            {
+                Dbgl($"found {name} not in disallow list, storing");
+            }
 
             if (mustHaveItemToPull.Value && !container.GetInventory().HaveItem(item.m_shared.m_name))
                 return true;

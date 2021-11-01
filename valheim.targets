@@ -48,18 +48,20 @@
   </Choose>
   
   <!-- Manual overrides -->
-  <PropertyGroup>
-    <BepInExPath>$(GamePath)\BepInEx</BepInExPath>
-    <ManagedDataPath>$(GamePath)\valheim_Data\Managed</ManagedDataPath>
-    <UnityPath>$(GamePath)\unstripped_corlib</UnityPath>
+	<PropertyGroup>
+	  <!--  <BepInExPath>$(GamePath)\BepInEx</BepInExPath> -->
+	  <BepInExPath>C:\Users\nick\AppData\Roaming\Thunderstore Mod Manager\DataFolder\Valheim\profiles\nicks\BepInEx</BepInExPath>
+	  <ManagedDataPath>$(GamePath)\valheim_Data\Managed</ManagedDataPath>
+	  <!-- <UnityPath>$(GamePath)\unstripped_corlib</UnityPath> -->
+	  <UnityPath>C:\Users\nick\AppData\Roaming\Thunderstore Mod Manager\DataFolder\Valheim\profiles\nicks\unstripped_corlib</UnityPath>
   </PropertyGroup>
   
   <!-- Set start action -->
   <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
     <StartAction>Program</StartAction>
     <StartProgram>$(GamePath)\valheim.exe</StartProgram>
-    <StartArguments>-console</StartArguments>
-    <StartWorkingDirectory>$(GamePath)</StartWorkingDirectory>
+	  <StartArguments>-console --doorstop-enable true --doorstop-target "C:/Users/nick/AppData/Roaming/Thunderstore Mod Manager/DataFolder/Valheim/profiles/nicks/BepInEx/core/BepInEx.Preloader.dll" -force-vulkan -no-stereo-rendering</StartArguments>
+	  <StartWorkingDirectory>$(GamePath)</StartWorkingDirectory>
   </PropertyGroup>
 
   <!-- Add BepInEx references -->
@@ -118,7 +120,8 @@
   <!-- Add ServerSync reference -->
   <ItemGroup Label="ServerSync">
     <Reference Include="ServerSync">
-      <HintPath>..\..\ServerSync\bin\Debug\ServerSync.dll</HintPath>
+      <!-- <HintPath>..\..\ServerSync\bin\Debug\ServerSync.dll</HintPath> -->
+	  <HintPath>..\..\libs\ServerSync.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
@@ -261,12 +264,13 @@
   <!-- Copy to plugins folder and zip -->
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <ItemGroup>
-      <AllFiles Include="$(TargetDir)**\*.*" Exclude="$(TargetDir)**\*.pdb" />
+      <AllFiles Include="$(TargetDir)**\*.*" Exclude="$(TargetDir)**\*.pdb;*.ini" />
     </ItemGroup>
-    <Copy SourceFiles="@(AllFiles)" DestinationFolder="$(GamePath)\BepInEx\plugins\%(RecursiveDir)"></Copy>
-    <Delete Files="$(ProjectDir)\bin\$(TargetName).zip" />
+	<!--  <Copy SourceFiles="@(AllFiles)" DestinationFolder="$(GamePath)\BepInEx\plugins\%(RecursiveDir)"></Copy> -->
+	<Copy SourceFiles="@(AllFiles)" DestinationFolder="C:\Users\nick\AppData\Roaming\Thunderstore Mod Manager\DataFolder\Valheim\profiles\nicks\BepInEx\plugins-built"></Copy>
+	<!--  <Delete Files="$(ProjectDir)\bin\$(TargetName).zip" />
     <Copy SourceFiles="@(AllFiles)" DestinationFolder="$(TargetDir)..\Release\%(RecursiveDir)"></Copy>
     <ZipDirectory SourceDirectory="$(TargetDir)..\Release" DestinationFile="$(ProjectDir)\bin\$(TargetName).zip" />
-    <RemoveDir Directories="$(TargetDir)..\Release" />
-  </Target>
+    <RemoveDir Directories="$(TargetDir)..\Release" /> -->
+  </Target> 
 </Project>

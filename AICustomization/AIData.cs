@@ -27,7 +27,7 @@
         public float consumeSearchInterval;
         public bool despawnInDay;
         public bool eventCreature;
-        
+
         public float timeToSafe;
 
         public float viewRange;
